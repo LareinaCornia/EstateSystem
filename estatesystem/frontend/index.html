@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>房地产销售管理系统</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            position: relative;
+            margin-bottom: 50px; /* 确保底部小灰字不会遮挡页面内容 */
+            font-family: '宋体', sans-serif;
+            margin: 0; /* 去除默认的页面边距 */
+            padding: 0; /* 去除默认的页面内边距 */
+           
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 10px;
+            color: grey;
+        }
+
+        /* 居中文本和按钮 */
+        h2, p {
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: bold;
+            text-align: center;
+       }
+
+        /* 居中按钮 */
+        button {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 10px; /* 按钮之间的间距，根据需要调整 */
+        }
+
+        /* 水平排列按钮 */
+        .horizontal-buttons {
+            text-align: center;
+        }
+
+        .horizontal-buttons button {
+            display: inline-block;
+            margin: 0 10px; /* 调整按钮之间的间距 */
+        }
+
+        /* 分割线和间距 */
+        .section {
+            margin-top: 20px; /* 不同部分之间的间距，根据需要调整 */
+            border-top: 1px solid #ccc; /* 分割线样式，可以根据需要调整颜色和粗细 */
+            padding-top: 20px; /* 分割线上方的间距，根据需要调整 */
+        }
+
+        .form {
+           
+            margin: 200px; /* 调整表单与边缘的距离 */
+        }
+
+        .button-container {
+            position: relative;
+            bottom: -20px; /* 为了避免语法错误，添加了单位，比如 px */
+            right: 0px; /* 调整按钮距离表单的右下角 */
+            display: block;
+            margin-bottom: 10px; /* 按钮之间的间距，根据需要调整 */
+        }
+
+        .sales-summary {
+            text-align: center;
+            margin: 20px 0;
+            font-size: smaller;
+            color: gray;
+        }
+
+        #recordSaleBtn {
+            background-color: #66a3ff; /* 浅蓝色底 */
+            color: white; /* 白色文字 */
+            margin-right: 10px; /* 按钮右边距 */
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h1 style="font-weight: bold; font-size: 35px; line-height: 1.5;">房地产销售管理系统</h1>
+         <div class="sales-summary">
+            <p>总销售额：<span id="totalSales"></span> 元；成交量：<span id="totalTransactions"></span> 笔</p>
+        </div>
+
+        <!-- 销售记录管理 -->
+        <div class="section">
+            <h2>销售记录管理</h2>
+            <div class="horizontal-buttons">
+                <button type="button" onclick="showSalesForm()">录入</button>
+                <button type="button" onclick="showSalesTable()">查询</button>
+            </div>
+
+
+            <!-- 销售录入 -->
+            <div id="salesForm" class="form" style="display: none;">
+                <label for="eid">楼盘编号:</label>
+                <input type="text" id="eid" name="eid" required>
+                <label for="cid">客户编号:</label>
+                <input type="text" id="cid" name="cid" required>
+                <label for="saledate">销售日期:</label>
+                <input type="date" id="saledate" name="saledate" required>
+                <label for="price">销售价格:</label>
+                <input type="number" id="price" name="price" required>
+                <div class="button-container">
+                    <button type="button" id="recordSaleBtn" onclick="saveSalesRecord()">确定</button>
+                    <button type="button" id="recordSaleBtn" onclick="hideSalesForm()">取消</button>
+                </div>
+            </div>
+
+            <!-- 销售查询 -->
+            <!-- 销售记录查询表格容器 -->
+            <div id="salesTableContainer" ></div>
+
+
+
+        </div>
+
+        <!-- 楼盘信息管理 -->
+        <div class="section">
+            <h2>楼盘信息管理</h2>
+            <div class="horizontal-buttons">
+                <button type="button" onclick="showEstatesForm()('添加')">添加</button>
+                <button type="button" onclick="showModifyEstateForm('修改')">修改</button>
+                <button type="button" onclick="showEstatesTable()">查询</button>
+            </div>
+
+            <!-- 添加 -->
+            <div id="estatesForm" class="form" style="display: none;">
+                <label for="eeid">楼盘编号:</label>
+                <input type="text" id="eeid" name="eeid" required>
+                <label for="ename">楼盘名称:</label>
+                <input type="text" id="ename" name="ename" required>
+                <label for="address">楼盘地址:</label>
+                <input type="text" id="address" name="address" required>
+                <div class="button-container">
+                    <button type="button" id="recordSaleBtn" onclick="saveEsatesRecord()">确定</button>
+                    <button type="button" id="recordSaleBtn" onclick="hideEstatesForm()">取消</button>
+                </div>
+            </div>
+
+            <!-- 修改 -->
+            <div id="modifyEstateForm" class="form" style="display: none;">
+                <label for="modifyEid">请输入要修改的楼盘编号:</label>
+                <input type="text" id="modifyEid" name="modifyEid" required>
+                <div class="button-container">
+                    <button type="button" id="recordSaleBtn" onclick="confirmModifyEstate()">确认</button>
+                    <button type="button" id="recordSaleBtn" onclick="cancelModifyEstate()">取消</button>
+                </div>
+            </div>
+
+            <!-- 查询 -->
+            <div id="estatesTableContainer" ></div>
+
+        </div>
+
+        <!-- 客户信息管理 -->
+        <div class="section">
+            <h2>客户信息管理</h2>
+            <div class="horizontal-buttons">
+                <button type="button" onclick="showCostumersForm('添加')">添加</button>
+                <button type="button" onclick="showModifyCostumersForm('修改')">修改</button>
+                <button type="button" onclick="showCostumersTable()">查询</button>
+            </div>
+
+            <!-- 顾客信息添加表单 -->
+            <div id="costumersForm" class="form" style="display: none;">
+                <label for="ccid">顾客编号:</label>
+                <input type="text" id="ccid" name="ccid" required>
+                <label for="cname">顾客姓名:</label>
+                <input type="text" id="cname" name="cname" required>
+                <label for="phone">手机号码:</label>
+                <input type="text" id="phone" name="phone" required>
+                <label for="sex">顾客性别:</label>
+                <input type="text" id="sex" name="sex" required>
+                <label for="age">顾客年龄:</label>
+                <input type="text" id="age" name="age" required>
+                <div class="button-container">
+                    <button type="button" id="recordSaleBtn" onclick="saveCostumersRecord()">确定</button>
+                    <button type="button" id="recordSaleBtn" onclick="hideCostumersForm()">取消</button>
+                </div>
+            </div>
+
+             <!-- 修改 -->
+            <div id="modifyCostumersForm" class="form" style="display: none;">
+                <label for="modifyCid">请输入要修改的顾客编号:</label>
+                <input type="text" id="modifyCid" name="modifyCid" required>
+                <div class="button-container">
+                    <button type="button" id="recordSaleBtn" onclick="confirmModifyCostumers()">确认</button>
+                    <button type="button" id="recordSaleBtn" onclick="cancelModifyCostumers()">取消</button>
+                </div>
+            </div>
+
+            <!-- 销售查询 -->
+            <!-- 销售记录查询表格容器 -->
+            <div id="costumersTableContainer"></div>
+    
+        </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 代码 -->
+    <script src="js/app.js"></script>
+</body>
+</html>
